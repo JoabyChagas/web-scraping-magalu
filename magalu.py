@@ -2,20 +2,11 @@ import telebot
 from time import sleep
 from setup import TOKEN, CHAT_ID
 import requests
-from selenium import webdriver
-from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup as bs
 
-class Magalu:
-    def __init__(self, driver):
-        self.driver = driver
-        
-        
-# Inicialize o driver do Selenium
-ff = webdriver.Chrome()
-ff.get('https://www.magazineluiza.com.br/selecao/ofertasdodia/')
-html = ff.page_source
-soup = bs(html, 'html.parser')
+url = 'https://www.magazineluiza.com.br/selecao/ofertasdodia/'
+html = requests.get(url)
+soup = bs(html.content, 'html.parser')
 bot = telebot.TeleBot(token=TOKEN, parse_mode='MARKDOWN')
 
 links = soup.find_all('ul')
@@ -50,10 +41,6 @@ Link: https://www.magazineluiza.com.br/{product_link}
 Título: {product_title}
 Preço Original: {price_original}
 Preço com Desconto: {price_value}
-Link: https://www.magazineluiza.com.br/{product_link}
+Link: https://www.magazineluiza.com.br{product_link}
 ''')
-        
-        sleep(60)
-
-# Feche o driver do Selenium
-ff.quit()
+        sleep(600)
